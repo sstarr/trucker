@@ -35,8 +35,9 @@ module Trucker
   end
 
   class Migrator
-    def initialize(name)
+    def initialize(name, label = nil)
       @model = Model.new(name)
+      @label = label
       @counter = import_counter
       @total_records = "#{@model.base}".constantize.count
       @status = status_message
@@ -47,7 +48,7 @@ module Trucker
     def status_message
       status = "Migrating "
       # this next line is fucked because it fails to accomodate offsets
-      status += "#{ENV['limit'].blank? ? "all" : ENV['limit']} #{label || @model.name}"
+      status += "#{ENV['limit'].blank? ? "all" : ENV['limit']} #{@label || @model.name}"
       status += " after #{@model.offset}" if @model.offset
     end
     def import_counter
