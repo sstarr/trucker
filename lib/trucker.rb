@@ -1,5 +1,6 @@
 module Trucker
   class Model
+    attr_accessor :name
     def initialize(name)
       @name = name
     end
@@ -42,23 +43,23 @@ module Trucker
     unless options[:helper]
   
       # Grab model to migrate
-      model = name.to_s.classify
+      @model = Model.new(name)
   
       # Wipe out existing records
-      model.constantize.delete_all
+      @model.name.constantize.delete_all
 
       # Status message
       status = "Migrating "
-      status += "#{limit || "all"} #{label || name}"
-      status += " after #{offset}" if offset
+      status += "#{@model.limit || "all"} #{label || @model.name}"
+      status += " after #{@model.offset}" if @model.offset
   
       # Set import counter
       counter = 0
-      counter += offset.to_i if offset
-      total_records = "Legacy#{model}".constantize.count
+      counter += @model.offset.to_i if @model.offset
+      total_records = "Legacy#{@model.name}".constantize.count
   
       # Start import
-      query(model).each do |record|
+      @model.query.each do |record|
         counter += 1
         puts status + " (#{counter}/#{total_records})"
         record.migrate
@@ -67,6 +68,5 @@ module Trucker
       eval options[:helper].to_s
     end
   end
-
 end
 
