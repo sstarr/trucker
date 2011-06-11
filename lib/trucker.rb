@@ -70,13 +70,14 @@ module Trucker
 
     unless options[:helper]
 
-      @model = Model.new(name)
+      @model = Model.new(name, label)
       @migrator = Migrator.new(name)
       @migrator.destroy_nonlegacy_records # this can now be made optional
       @migrator.import
 
     else
       eval options[:helper].to_s
+      # these can now be subclasses of Migrator, so you get a lot of stuff for free
     end
   end
 end
