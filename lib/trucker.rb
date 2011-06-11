@@ -17,9 +17,7 @@ module Trucker
       complete
     end
     def base
-      # this might look baffling, so check the specs. String#titlecase is badly named (in
-      # my opinion) because in addition to title-casing, it also arrogantly adds a space
-      "Legacy#{@name.singularize.titlecase.split(" ").join}"
+      "Legacy#{@name.classify.split(" ").join}"
     end
 
     def batch(method)
@@ -36,34 +34,46 @@ module Trucker
     end
   end
 
-  def self.migrate(name, options={})
-    # Grab custom entity label if present
-    label = options.delete(:label) if options[:label]
-
-    unless options[:helper]
-  
-      # Grab model to migrate
+  class Migrator
+    def initialize(name)
       @model = Model.new(name)
-  
-      # Wipe out existing records
+      @counter = import_counter
+      @total_records = "#{@model.base}".constantize.count
+      @status = status_message
+    end
+    def destroy_nonlegacy_records
       @model.name.to_s.constantize.delete_all
-
-      # Status message
+    end
+    def status_message
       status = "Migrating "
-      status += "#{@model.limit || "all"} #{label || @model.name}"
+      # this next line is fucked because it fails to accomodate offsets
+      status += "#{ENV['limit'].blank? "all" : ENV['limit']} #{label || @model.name}"
       status += " after #{@model.offset}" if @model.offset
-  
-      # Set import counter
+    end
+    def import_counter
       counter = 0
       counter += @model.offset.to_i if @model.offset
-      total_records = "Legacy#{@model.base}".constantize.count
-  
-      # Start import
+    end
+    def import
       @model.query.each do |record|
-        counter += 1
-        puts status + " (#{counter}/#{total_records})"
+        @counter += 1
+        puts @status + " (#{@counter}/#{@total_records})"
         record.migrate
       end
+    end
+  end
+
+  def self.migrate(name, options={})
+    # Grab custom entity label if present
+    label = options.delete(:label) if options[:label] # this got left out of the refactor!
+
+    unless options[:helper]
+
+      @model = Model.new(name)
+      @migrator = Migrator.new(name)
+      @migrator.destroy_nonlegacy_records # this can now be made optional
+      @migrator.import
+
     else
       eval options[:helper].to_s
     end
