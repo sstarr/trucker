@@ -54,6 +54,7 @@ module Trucker
     def import_counter
       counter = 0
       counter += @model.offset.to_i if @model.offset
+      counter
     end
     def import
       @model.query.each do |record|
