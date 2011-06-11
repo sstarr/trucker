@@ -1,4 +1,39 @@
 module Trucker
+  class Model
+    def initialize(name)
+      @name = name
+    end
+
+    def query
+      eval construct_query
+    end
+    def construct_query
+      if ENV['limit'] or ENV['offset'] or ENV['where']
+        complete = base + "#{where}#{limit}#{offset}"
+      else
+        complete = base + ".all"
+      end
+      complete
+    end
+    def base
+      # this might look baffling, so check the specs. String#titlecase is badly named (in
+      # my opinion) because in addition to title-casing, it also arrogantly adds a space
+      "Legacy#{@name.singularize.titlecase.split(" ").join}"
+    end
+
+    def batch(method)
+      nil || ".#{method}(#{ENV[method]})" unless ENV[method].blank?
+    end
+    def where
+      batch("where")
+    end
+    def limit
+      batch("limit")
+    end
+    def offset
+      batch("offset")
+    end
+  end
 
   def self.migrate(name, options={})
     # Grab custom entity label if present
@@ -33,41 +68,5 @@ module Trucker
     end
   end
 
-  def self.query(model)
-    eval construct_query(model)
-  end
-
-  # FIXME: this looks like a pretty coherent argument for a Model class
-  def self.base(model)
-    # this might look baffling, so check the specs. String#titlecase is badly named (in
-    # my opinion) because in addition to title-casing, it also arrogantly adds a space
-    "Legacy#{model.singularize.titlecase.split(" ").join}"
-  end
-
-  def self.construct_query(model)
-    if ENV['limit'] or ENV['offset'] or ENV['where']
-      complete = base(model) + "#{where}#{limit}#{offset}"
-    else
-      complete = base(model) + ".all"
-    end
-    complete
-  end
-
-  def self.batch(method)
-    nil || ".#{method}(#{ENV[method]})" unless ENV[method].blank?
-  end
-
-  def self.where
-    batch("where")
-  end
-
-  def self.limit
-    batch("limit")
-  end
-
-  def self.offset
-    batch("offset")
-  end
-  
 end
 
