@@ -70,8 +70,7 @@ module Trucker
 
     unless options[:helper]
 
-      @model = Model.new(name, label)
-      @migrator = Migrator.new(name)
+      @migrator = Migrator.new(name, label)
       @migrator.destroy_nonlegacy_records # this can now be made optional
       @migrator.import
 
