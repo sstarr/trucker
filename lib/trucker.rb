@@ -56,7 +56,7 @@ module Trucker
       # Set import counter
       counter = 0
       counter += @model.offset.to_i if @model.offset
-      total_records = "Legacy#{@model.name}".constantize.count
+      total_records = "Legacy#{@model.base}".constantize.count
   
       # Start import
       @model.query.each do |record|
