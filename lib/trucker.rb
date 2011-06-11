@@ -2,7 +2,7 @@ module Trucker
   class Model
     attr_accessor :name
     def initialize(name)
-      @name = name
+      @name = name.to_s.classify
     end
 
     def query
@@ -46,7 +46,7 @@ module Trucker
       @model = Model.new(name)
   
       # Wipe out existing records
-      @model.name.to_s.classify.constantize.delete_all
+      @model.name.to_s.constantize.delete_all
 
       # Status message
       status = "Migrating "
