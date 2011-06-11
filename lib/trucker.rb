@@ -47,7 +47,7 @@ module Trucker
     def status_message
       status = "Migrating "
       # this next line is fucked because it fails to accomodate offsets
-      status += "#{ENV['limit'].blank? "all" : ENV['limit']} #{label || @model.name}"
+      status += "#{ENV['limit'].blank? ? "all" : ENV['limit']} #{label || @model.name}"
       status += " after #{@model.offset}" if @model.offset
     end
     def import_counter
