@@ -50,6 +50,7 @@ module Trucker
       # this next line is fucked because it fails to accomodate offsets
       status += "#{ENV['limit'].blank? ? "all" : ENV['limit']} #{@label || @model.name}"
       status += " after #{@model.offset}" if @model.offset
+      status
     end
     def import_counter
       counter = 0
