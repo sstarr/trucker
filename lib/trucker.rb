@@ -68,7 +68,7 @@ module Trucker
 
   def self.migrate(name, options={})
     # Grab custom entity label if present
-    label = options.delete(:label) if options[:label] # this got left out of the refactor!
+    label = options.delete(:label) if options[:label]
 
     unless options[:helper]
 
