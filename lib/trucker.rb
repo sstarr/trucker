@@ -46,7 +46,7 @@ module Trucker
       @model = Model.new(name)
   
       # Wipe out existing records
-      @model.name.constantize.delete_all
+      @model.name.to_s.classify.constantize.delete_all
 
       # Status message
       status = "Migrating "
