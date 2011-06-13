@@ -1,9 +1,9 @@
 module Trucker
   class Model
     attr_accessor :name, :options
-    def initialize(name, options)
-      @name = name.to_s.classify
-      @options = options
+    def initialize(name, options = {})
+      self.name = name.to_s.classify
+      self.options = options
     end
 
     def query
@@ -25,13 +25,13 @@ module Trucker
       nil || ".#{method}(#{options[method]})" unless options[method].blank?
     end
     def where
-      batch("where")
+      batch(:where)
     end
     def limit
-      batch("limit")
+      batch(:limit)
     end
     def offset
-      batch("offset")
+      batch(:offset)
     end
   end
 
