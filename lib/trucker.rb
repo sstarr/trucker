@@ -74,6 +74,7 @@ module Trucker
     model_options[:where] = ENV['where']
     model_options[:limit] = ENV['limit']
     model_options[:offset] = ENV['offset']
+    # TODO: ENV should ONLY appear in the Rake tasks - everywhere else should be properly OO
 
     # Grab custom entity label if present
     model_options[:label] = options.delete(:label) if options[:label]
