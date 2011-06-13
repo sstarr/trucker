@@ -67,19 +67,19 @@ module Trucker
     end
   end
 
-  def self.model_options
-      model_options = {}
-      model_options[:where] = ENV['where']
-      model_options[:limit] = ENV['limit']
-      model_options[:offset] = ENV['offset']
-  end
-
   def self.migrate(name, options={})
+    # this annoys the hell out of me because I want it to be a separate method. I improved
+    # the speccing on this library but it's still nowhere near ideal. I'll have to fix this.
+    model_options = {}
+    model_options[:where] = ENV['where']
+    model_options[:limit] = ENV['limit']
+    model_options[:offset] = ENV['offset']
+
     # Grab custom entity label if present
-    label = options.delete(:label) if options[:label]
+    model_options[:label] = options.delete(:label) if options[:label]
 
     unless options[:helper]
-      @migration = Migration.new(name, model_options.merge({:label => options[:label]}))
+      @migration = Migration.new(name, model_options)
       @migration.destroy_nonlegacy_records # this can now be made optional
       @migration.import
 
