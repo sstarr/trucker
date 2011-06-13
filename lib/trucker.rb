@@ -22,7 +22,7 @@ module Trucker
     end
 
     def batch(method)
-      nil || ".#{method}(#{ENV[method]})" unless ENV[method].blank?
+      nil || ".#{method}(#{options[method]})" unless options[method].blank?
     end
     def where
       batch("where")
@@ -81,6 +81,7 @@ module Trucker
     unless options[:helper]
       @migration = Migration.new(name, model_options)
       @migration.destroy_nonlegacy_records # this can now be made optional
+                                           # method also needs much better name
       @migration.import
 
       # here is exactly how you do it. you inherit from that fucker, override import, and
