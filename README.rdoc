@@ -15,7 +15,7 @@ Trucker is a gem that helps migrate legacy data into a Rails app.
 
 3. Generate the basic trucker files
 
-    script/generate truck
+    rails generate truck
 
     This will do the following things:
     * Add legacy adapter to database.yml
