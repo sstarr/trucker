@@ -12,6 +12,8 @@ module Trucker
     def construct_query
       if options[:limit] or options[:offset] or options[:where]
         complete = base + "#{where}#{limit}#{offset}"
+      elsif options[:sql]
+        complete = base + ".find_by_sql('#{options[:sql]}')"
       else
         complete = base + ".all"
       end
@@ -74,6 +76,7 @@ module Trucker
     model_options[:where] = ENV['where']
     model_options[:limit] = ENV['limit']
     model_options[:offset] = ENV['offset']
+    model_options[:sql] = ENV['sql']
     # TODO: ENV should ONLY appear in the Rake tasks - everywhere else should be properly OO
 
     # Grab custom entity label if present

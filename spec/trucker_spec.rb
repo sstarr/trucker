@@ -21,6 +21,10 @@ describe "Trucker builds ActiveRecord queries in Rails 3 syntax" do
     @model.options[:where] = ":username => 'fred'"
     @model.construct_query.should == "LegacyMuppet.where(:username => 'fred')"
   end
+  it "handles find_by_sql()" do
+    @model.options[:sql] = "id is not null"
+    @model.construct_query.should == "LegacyMuppet.find_by_sql('id is not null')"
+  end
 end
 
 describe "Trucker can handle fucking underscores" do
