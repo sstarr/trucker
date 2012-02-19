@@ -237,20 +237,6 @@ Rails 3.1 compatible code lives on the rails31 branch. The functionality's refac
 oriented model in the refactor branch.
 
 
-== Weird Little Caveat
-
-I imported one User record from my legacy DB, then created a User through the normal channels. I got this crazy-ass weird shit:
-
-    >> User.first == User.last
-      User Load (0.9ms)  SELECT "users".* FROM "users" LIMIT 1
-      User Load (1.2ms)  SELECT "users".* FROM "users" ORDER BY users.id DESC LIMIT 1
-    => true
-
-I believe this depends on Rails assuming things about the implementation details in my database,
-because the new app's on Postgres and the old version was on MySQL, but I can't actually say for
-sure. Just putting it here in case it happens to anyone else.
-
-
 == Background
 
 
