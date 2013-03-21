@@ -84,7 +84,7 @@ module Trucker
 
     unless options[:helper]
       @migration = Migration.new(name, model_options)
-      @migration.destroy_nonlegacy_records # this can now be made optional
+      # @migration.destroy_nonlegacy_records # this can now be made optional
                                            # method also needs much better name
       @migration.import
 
